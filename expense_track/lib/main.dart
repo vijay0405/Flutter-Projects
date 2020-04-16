@@ -17,7 +17,7 @@ class Expense extends StatelessWidget {
       home: MyHomePage(),
       theme: ThemeData(
           primarySwatch: Colors.teal,
-          accentColor: Colors.amberAccent,
+          accentColor: Colors.deepOrange,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
               title: TextStyle(
