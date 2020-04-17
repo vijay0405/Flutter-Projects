@@ -36,9 +36,7 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(groupedTransactions);
-    return Container(
-      padding: EdgeInsets.all(5),
-      child: Card(
+    return Card(
         elevation: 6,
         margin: EdgeInsets.all(20),
         child: Row(
@@ -54,7 +52,6 @@ class Chart extends StatelessWidget {
                         : (data['amount'] as double) / maxSpending));
           }).toList(),
         ),
-      ),
-    );
+      );
   }
 }
