@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favoriteMeals = [];
 
   void _setFilters(Map<String, bool> filteredData) {
     setState(() {
@@ -49,6 +50,23 @@ class _MyAppState extends State<MyApp> {
         return true;
       }).toList();
     });
+  }
+
+  void _toggleFav(String mealId) {
+    final existingIndex = _favoriteMeals.indexWhere((meal) => mealId == meal.id);
+    if(existingIndex >= 0) {
+      setState(() {
+        _favoriteMeals.removeAt(existingIndex);
+      });
+    } else {
+      setState(() {
+        _favoriteMeals.add(DUMMY_MEALS.firstWhere((meal) => meal.id == mealId));
+      });
+    }
+  }
+
+  bool _isFavMeal(String mealId) {
+    return _favoriteMeals.any((meal)=>meal.id==mealId);
   }
 
   @override
@@ -72,9 +90,9 @@ class _MyAppState extends State<MyApp> {
       ),
       // home: CategoriesScreen(),
       routes: {
-        '/': (ctx)=>TabsScreen(),
+        '/': (ctx)=>TabsScreen(_favoriteMeals),
         CategoryMeals.routeName: (ctx)=>CategoryMeals(_availableMeals),
-        MealDetail.routeName: (ctx)=>MealDetail(),
+        MealDetail.routeName: (ctx)=>MealDetail(_toggleFav, _isFavMeal),
         FiltersScreen.routeName: (ctx)=>FiltersScreen(_filters, _setFilters)
       },
       onGenerateRoute: (settings) {
