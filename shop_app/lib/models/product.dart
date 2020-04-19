@@ -8,6 +8,6 @@ class Product {
   final String imageUrl;
   bool isFavorite;
 
-  Product(@required this.id, @required this.description, @required this.imageUrl, this.isFavorite=false, @required this.price,
-      @required this.title);
+  Product({@required this.id, @required this.description, @required this.imageUrl, this.isFavorite, @required this.price,
+      @required this.title});
 }
