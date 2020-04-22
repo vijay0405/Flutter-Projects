@@ -54,15 +54,17 @@ class Products with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product product) {
-    const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
-    return http.post(url, body: json.encode({
-      "title": product.title,
-      "description": product.description,
-      "imageUrl": product.imageUrl,
-      "price": product.price,
-      "isFavorite": product.isFavorite,
-    })).then((response){
+  Future<void> addProduct(Product product) async {
+    const url = "https://shop-flutter-fec3d.firebaseio.com/products";
+    try {
+      final response = await http.post(url,
+        body: json.encode({
+          "title": product.title,
+          "description": product.description,
+          "imageUrl": product.imageUrl,
+          "price": product.price,
+          "isFavorite": product.isFavorite,
+        }));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
         description: product.description,
@@ -72,14 +74,10 @@ class Products with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
-    }).catchError((err){
+    } catch(err) {
       print(err);
-      throw err;
-    });
-    
-
-
-    
+      throw(err);
+    }
   }
 
   void updateProduct(String id, Product newProduct) {
@@ -93,7 +91,7 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    _items.removeWhere((prod)=>prod.id == id);
+    _items.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }
 
@@ -110,7 +108,4 @@ class Products with ChangeNotifier {
   Product findById(String id) {
     return _items.firstWhere((item) => item.id == id);
   }
-
-
-
 }
