@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/httpExceptions.dart';
 import 'package:shop_app/widgets/productItem.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -101,9 +102,19 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = "https://shop-flutter-fec3d.firebaseio.com/products/$id.json";
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    final response = await http.delete(url);
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException("Could not delete Product.");
+    }
+    existingProduct = null;
   }
 
   // void showFavoritesOnly() {
