@@ -58,13 +58,13 @@ class Products with ChangeNotifier {
     const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
     try {
       final response = await http.post(url,
-        body: json.encode({
-          "title": product.title,
-          "description": product.description,
-          "imageUrl": product.imageUrl,
-          "price": product.price,
-          "isFavorite": product.isFavorite,
-        }));
+          body: json.encode({
+            "title": product.title,
+            "description": product.description,
+            "imageUrl": product.imageUrl,
+            "price": product.price,
+            "isFavorite": product.isFavorite,
+          }));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
         description: product.description,
@@ -74,15 +74,26 @@ class Products with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
-    } catch(err) {
+    } catch (err) {
       print(err);
-      throw(err);
+      throw (err);
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      final url = "https://shop-flutter-fec3d.firebaseio.com/products/$id.json";
+      final response = await http.patch(
+        url,
+        body: json.encode({
+          'title': newProduct.title,
+          'description': newProduct.description,
+          'price': newProduct.price,
+          'imageUrl': newProduct.imageUrl,
+        }),
+      );
+      print(response);
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {
@@ -112,20 +123,19 @@ class Products with ChangeNotifier {
       final extractedData = json.decode(response.body);
       final List<Product> LoadedPrdocuts = [];
       print(extractedData);
-      extractedData.forEach((prodId, prodData){
+      extractedData.forEach((prodId, prodData) {
         LoadedPrdocuts.add(Product(
-          id: prodId,
-          description: prodData['description'],
-          imageUrl: prodData['imageUrl'],
-          price: prodData['price'],
-          title: prodData['title'],
-          isFavorite: prodData['isFavorite']
-        ));
+            id: prodId,
+            description: prodData['description'],
+            imageUrl: prodData['imageUrl'],
+            price: prodData['price'],
+            title: prodData['title'],
+            isFavorite: prodData['isFavorite']));
       });
       _items = LoadedPrdocuts;
-      notifyListeners();      
-    } catch(err) {
-      throw(err);
+      notifyListeners();
+    } catch (err) {
+      throw (err);
     }
   }
 
