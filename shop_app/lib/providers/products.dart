@@ -134,6 +134,7 @@ class Products with ChangeNotifier {
       final extractedData = json.decode(response.body);
       final List<Product> LoadedPrdocuts = [];
       print(extractedData);
+      if (extractedData != null)
       extractedData.forEach((prodId, prodData) {
         LoadedPrdocuts.add(Product(
             id: prodId,
