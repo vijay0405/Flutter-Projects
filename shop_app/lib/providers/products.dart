@@ -54,25 +54,27 @@ class Products with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
-    http.post(url, body: json.encode({
+    return http.post(url, body: json.encode({
       "title": product.title,
       "description": product.description,
       "imageUrl": product.imageUrl,
       "price": product.price,
       "isFavorite": product.isFavorite,
-    }));
+    })).then((response){
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        title: product.title,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
 
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      description: product.description,
-      imageUrl: product.imageUrl,
-      price: product.price,
-      title: product.title,
-    );
-    _items.add(newProduct);
-    notifyListeners();
+
     
   }
 
