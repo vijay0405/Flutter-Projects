@@ -131,10 +131,11 @@ class Products with ChangeNotifier {
     const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> LoadedPrdocuts = [];
       print(extractedData);
-      if (extractedData != null)
+      if (extractedData == null)
+        return;
       extractedData.forEach((prodId, prodData) {
         LoadedPrdocuts.add(Product(
             id: prodId,
