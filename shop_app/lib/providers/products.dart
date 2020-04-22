@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/widgets/productItem.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import './product.dart';
 
@@ -53,6 +55,15 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product product) {
+    const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
+    http.post(url, body: json.encode({
+      "title": product.title,
+      "description": product.description,
+      "imageUrl": product.imageUrl,
+      "price": product.price,
+      "isFavorite": product.isFavorite,
+    }));
+
     final newProduct = Product(
       id: DateTime.now().toString(),
       description: product.description,
@@ -62,6 +73,7 @@ class Products with ChangeNotifier {
     );
     _items.add(newProduct);
     notifyListeners();
+    
   }
 
   void updateProduct(String id, Product newProduct) {
@@ -92,4 +104,7 @@ class Products with ChangeNotifier {
   Product findById(String id) {
     return _items.firstWhere((item) => item.id == id);
   }
+
+
+
 }
