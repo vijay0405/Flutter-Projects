@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/httpExceptions.dart';
-import 'package:shop_app/widgets/productItem.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -84,7 +83,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = "https://shop-flutter-fec3d.firebaseio.com/products/$id.json";
+      final url = "https://shop-flutter-fec3d.firebaseio.com/products/$id.json?auth=$authToken";
       final response = await http.patch(
         url,
         body: json.encode({
@@ -103,7 +102,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = "https://shop-flutter-fec3d.firebaseio.com/products/$id.json";
+    final url = "https://shop-flutter-fec3d.firebaseio.com/products/$id.json?auth=$authToken";
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     final response = await http.delete(url);
@@ -131,7 +130,7 @@ class Products with ChangeNotifier {
   Products(this.authToken, this._items);
 
   Future<void> fetchAndSetData() async {
-    const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
+    final url = "https://shop-flutter-fec3d.firebaseio.com/products.json?auth=$authToken";
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
