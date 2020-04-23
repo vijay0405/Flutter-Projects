@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/httpExceptions.dart';
 import 'dart:convert';
 
@@ -52,7 +53,13 @@ class Auth with ChangeNotifier {
       );
       _autoLogout();
       notifyListeners();
-
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        'token': _token,
+        'userId': _userId,
+        'expriyTime': _expiryTime.toIso8601String()
+      });
+      prefs.setString('userData', userData);
       print(json.decode(response.body));
     } catch (error) {
       throw error;
@@ -67,7 +74,27 @@ class Auth with ChangeNotifier {
     return _authenticate(email, password, "signInWithPassword");
   }
 
-  void logout() {
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if(!prefs.containsKey("userData")) {
+      return false;
+    }
+    final extractedUserData = json.decode(prefs.getString("userData")) as Map<String, Object>;
+    final expiryTime = DateTime.parse(extractedUserData['expriyTime']);
+
+    if(expiryTime.isBefore(DateTime.now())) {
+      return false;
+    }
+
+    _token = extractedUserData['token'];
+    _userId = extractedUserData['userId'];
+    _expiryTime = expiryTime;
+    notifyListeners();
+    _autoLogout();
+    return true;
+  }
+
+  Future<void> logout() async {
     _token = null;
     _userId = null;
     _expiryTime = null;
@@ -76,6 +103,8 @@ class Auth with ChangeNotifier {
       _authTimer = null;
     }
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   void _autoLogout() {
