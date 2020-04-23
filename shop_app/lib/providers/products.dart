@@ -63,6 +63,7 @@ class Products with ChangeNotifier {
             "description": product.description,
             "imageUrl": product.imageUrl,
             "price": product.price,
+            "creatorId": userId
           }));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
@@ -129,8 +130,9 @@ class Products with ChangeNotifier {
   final String userId;
   Products(this.authToken, this.userId, this._items);
 
-  Future<void> fetchAndSetData() async {
-    final url = "https://shop-flutter-fec3d.firebaseio.com/products.json?auth=$authToken";
+  Future<void> fetchAndSetData([bool filterByUser = false]) async {
+    final String filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : "";
+    final url = 'https://shop-flutter-fec3d.firebaseio.com/products.json?auth=$authToken&$filterByUser';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
