@@ -56,7 +56,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
+    final url = "https://shop-flutter-fec3d.firebaseio.com/products.json?auth=$authToken";
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -126,6 +126,9 @@ class Products with ChangeNotifier {
   //   _showFavoritesOnly = false;
   //   notifyListeners();
   // }
+
+  final String authToken;
+  Products(this.authToken, this._items);
 
   Future<void> fetchAndSetData() async {
     const url = "https://shop-flutter-fec3d.firebaseio.com/products.json";
