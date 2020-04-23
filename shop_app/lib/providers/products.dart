@@ -63,7 +63,6 @@ class Products with ChangeNotifier {
             "description": product.description,
             "imageUrl": product.imageUrl,
             "price": product.price,
-            "isFavorite": product.isFavorite,
           }));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
@@ -127,7 +126,8 @@ class Products with ChangeNotifier {
   // }
 
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+  Products(this.authToken, this.userId, this._items);
 
   Future<void> fetchAndSetData() async {
     final url = "https://shop-flutter-fec3d.firebaseio.com/products.json?auth=$authToken";
@@ -138,6 +138,10 @@ class Products with ChangeNotifier {
       print(extractedData);
       if (extractedData == null)
         return;
+      final favUrl = "https://shop-flutter-fec3d.firebaseio.com/userFavorites/$userId.json?auth=$authToken";
+      final favoriteResponse = await http.get(favUrl);
+      final favoriteData = json.decode(favoriteResponse.body);
+
       extractedData.forEach((prodId, prodData) {
         LoadedPrdocuts.add(Product(
             id: prodId,
@@ -145,7 +149,7 @@ class Products with ChangeNotifier {
             imageUrl: prodData['imageUrl'],
             price: prodData['price'],
             title: prodData['title'],
-            isFavorite: prodData['isFavorite']));
+            isFavorite: favoriteData == null? false : favoriteData[prodId] ?? false ));
       });
       _items = LoadedPrdocuts;
       notifyListeners();
