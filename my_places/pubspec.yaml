@@ -22,7 +22,7 @@ dependencies:
   provider: ^4.0.5
   image_picker: ^0.6.5+2
   path_provider: ^1.6.7
-  path: ^1.7.0
+  path: ^1.6.4
 
 
 
