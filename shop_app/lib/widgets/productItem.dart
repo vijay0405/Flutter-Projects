@@ -24,9 +24,10 @@ class productItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: FadeInImage(
+            placeholder: AssetImage('assets/images/product-placeholder.png'),
+            image: NetworkImage(product.imageUrl),
+            fit: BoxFit.cover
           ),
           onTap: () {
             Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
@@ -53,9 +54,11 @@ class productItem extends StatelessWidget {
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text("Added item to card"),
                 duration: Duration(seconds: 2),
-                action: SnackBarAction(label: "UNDO", onPressed: (){
-                  cart.removeSingleItem(product.id);
-                }),
+                action: SnackBarAction(
+                    label: "UNDO",
+                    onPressed: () {
+                      cart.removeSingleItem(product.id);
+                    }),
               ));
             },
             color: Theme.of(context).accentColor,
