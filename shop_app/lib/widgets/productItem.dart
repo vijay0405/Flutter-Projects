@@ -24,10 +24,13 @@ class productItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
-          child: FadeInImage(
-            placeholder: AssetImage('assets/images/product-placeholder.png'),
-            image: NetworkImage(product.imageUrl),
-            fit: BoxFit.cover
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+                placeholder:
+                    AssetImage('assets/images/product-placeholder.png'),
+                image: NetworkImage(product.imageUrl),
+                fit: BoxFit.cover),
           ),
           onTap: () {
             Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
