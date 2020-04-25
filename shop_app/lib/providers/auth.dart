@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/httpExceptions.dart';
 import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+
+
 
 class Auth with ChangeNotifier {
   String _token;
@@ -31,8 +34,12 @@ class Auth with ChangeNotifier {
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
     try {
-      final url =
-          "https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyBUtRwN0SaNzXHlvqXVbzI9eQQ09y6Piwk";
+      String data = await rootBundle.loadString('secrets.json');
+      Map<String, dynamic> jsonResult = json.decode(data) as Map<String, dynamic>;
+      print(jsonResult);
+      String api_key = jsonResult['api_key'];
+      final url = 
+          "https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$api_key";
       final response = await http.post(
         url,
         body: json.encode(
