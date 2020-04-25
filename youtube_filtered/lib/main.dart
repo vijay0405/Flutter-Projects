@@ -1,39 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player/youtube_player.dart';
-
+import 'screens/homeScreen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'youtube filtered',
+      title: 'youtube data api',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: MyHomePage(title: 'Youtube Player'),
+      home: HomeScreen(),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-
-  final String title;
-
-  MyHomePage({this.title});
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

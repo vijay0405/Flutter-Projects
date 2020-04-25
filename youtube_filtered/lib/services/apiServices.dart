@@ -59,7 +59,7 @@ class ApiService {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
 
-    ar response = await http.get(uri, headers: headers);
+    var response = await http.get(uri, headers: headers);
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
