@@ -1,3 +1,4 @@
+import 'package:expense_track/screens/authScreen.dart';
 import 'package:expense_track/widgets/newTransaction.dart';
 import 'package:expense_track/widgets/transactionList.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +18,7 @@ class Expense extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Track Expense',
-      home: MyHomePage(),
+      home: AuthScreen(),
       theme: ThemeData(
           primarySwatch: Colors.teal,
           accentColor: Colors.deepOrange,
@@ -84,6 +85,23 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  Widget _buildLandscapeContent() {
+    return  Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("Show Chart"),
+                Switch(
+                  value: _showChart,
+                  onChanged: (val) {
+                    setState(() {
+                      _showChart = val;
+                    });
+                  },
+                )
+              ],
+            );
+  }
+
   final titleController = TextEditingController();
   final amountController = TextEditingController();
 
@@ -119,20 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if(isLandscape) Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("Show Chart"),
-                Switch(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  },
-                )
-              ],
-            ),
+            if(isLandscape) _buildLandscapeContent(),
             if (!isLandscape) txChartWidget,
             if (!isLandscape) txListWidget,
             if(isLandscape)
