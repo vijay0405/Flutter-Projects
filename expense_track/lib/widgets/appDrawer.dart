@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/settingsScreen.dart';
 import '../providers/auth.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -12,12 +13,19 @@ class AppDrawer extends StatelessWidget {
             title: Text("this is drawer"),
             automaticallyImplyLeading: false,
           ),
-          Divider(),
           ListTile(
             leading: Icon(Icons.data_usage),
             title: Text('Home'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              Navigator.of(context).pushNamed(SettingsScreen.routeName);
             },
           ),
           Divider(),

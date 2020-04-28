@@ -1,4 +1,5 @@
 import 'package:expense_track/screens/authScreen.dart';
+import 'package:expense_track/screens/settingsScreen.dart';
 import 'package:expense_track/widgets/newTransaction.dart';
 import 'package:expense_track/widgets/transactionList.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,9 @@ class Expense extends StatelessWidget {
                               ConnectionState.waiting
                           ? SplashScreen()
                           : AuthScreen()),
+          routes: {
+            SettingsScreen.routeName : (cts) => SettingsScreen()
+          },
           theme: ThemeData(
               primarySwatch: Colors.teal,
               accentColor: Colors.deepOrange,
