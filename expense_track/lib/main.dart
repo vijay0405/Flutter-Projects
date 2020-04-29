@@ -6,9 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'widgets/transactionList.dart';
 import 'package:flutter/material.dart';
-import 'models/transaction.dart';
+import 'providers/transaction.dart';
 import 'screens/splashScreen.dart';
 import 'widgets/appDrawer.dart';
+import 'providers/transactions.dart';
 import 'providers/auth.dart';
 import 'widgets/chart.dart';
 
@@ -21,38 +22,43 @@ void main() {
 class Expense extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: Auth(),
-      child: Consumer<Auth>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: 'Track Expense',
-          home: auth.isAuth
-              ? MyHomePage()
-              : FutureBuilder(
-                  future: auth.tryAutoLogin(),
-                  builder: (ctx, authResultSnapshot) =>
-                      authResultSnapshot.connectionState ==
-                              ConnectionState.waiting
-                          ? SplashScreen()
-                          : AuthScreen()),
-          routes: {
-            SettingsScreen.routeName : (cts) => SettingsScreen()
-          },
-          theme: ThemeData(
-              primarySwatch: Colors.teal,
-              accentColor: Colors.deepOrange,
-              fontFamily: 'Quicksand',
-              textTheme: ThemeData.light().textTheme.copyWith(
-                    title: TextStyle(
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                    button: TextStyle(color: Colors.white),
-                  ),
-              appBarTheme: AppBarTheme(
-                  textTheme: ThemeData.light().textTheme.copyWith(
-                      title: TextStyle(fontFamily: 'OpenSans', fontSize: 20)))),
-        ),
+    return MultiProvider(providers: [
+      ChangeNotifierProvider.value(
+        value: Auth(),
+      ),
+      ChangeNotifierProvider.value(
+        value: Transactions(),
+      ),
+    ]);
+
+    child:
+    Consumer<Auth>(
+      builder: (ctx, auth, _) => MaterialApp(
+        title: 'Track Expense',
+        home: auth.isAuth
+            ? MyHomePage()
+            : FutureBuilder(
+                future: auth.tryAutoLogin(),
+                builder: (ctx, authResultSnapshot) =>
+                    authResultSnapshot.connectionState ==
+                            ConnectionState.waiting
+                        ? SplashScreen()
+                        : AuthScreen()),
+        routes: {SettingsScreen.routeName: (cts) => SettingsScreen()},
+        theme: ThemeData(
+            primarySwatch: Colors.teal,
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Quicksand',
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  title: TextStyle(
+                      fontFamily: 'Quicksand',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                  button: TextStyle(color: Colors.white),
+                ),
+            appBarTheme: AppBarTheme(
+                textTheme: ThemeData.light().textTheme.copyWith(
+                    title: TextStyle(fontFamily: 'OpenSans', fontSize: 20)))),
       ),
     );
   }
