@@ -80,25 +80,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _showChart = false;
 
-  void _addNewTransaction(String title, double amount, DateTime chosenDate) {
-    final newTx = Transaction(
-        title: title,
-        amount: amount,
-        date: chosenDate,
-        id: DateTime.now().toString());
+  // void _addNewTransaction(String title, double amount, DateTime chosenDate) {
+  //   final newTx = Transaction(
+  //       title: title,
+  //       amount: amount,
+  //       date: chosenDate,
+  //       id: DateTime.now().toString());
 
-    setState(() {
-      transactions.add(newTx);
-    });
-  }
+  //   setState(() {
+  //     transactions.add(newTx);
+  //   });
+  // }
 
-  void _deleteTransaction(String id) {
-    setState(() {
-      transactions.removeWhere((tx) {
-        return tx.id == id;
-      });
-    });
-  }
+  // void _deleteTransaction(String id) {
+  //   setState(() {
+  //     transactions.removeWhere((tx) {
+  //       return tx.id == id;
+  //     });
+  //   });
+  // }
 
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (_) {
           return GestureDetector(
             onTap: () {},
-            child: NewTransaction(_addNewTransaction),
+            child: NewTransaction(Transactions().addNewTransaction),
             behavior: HitTestBehavior.opaque,
           );
         });
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 appBar.preferredSize.height -
                 mediaQuery.padding.top) *
             0.7,
-        child: TransactionList(transactions, _deleteTransaction));
+        child: TransactionList(transactions, Transactions().deleteTransaction));
     final txChartWidget = Container(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
