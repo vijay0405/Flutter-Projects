@@ -4,7 +4,7 @@ import 'transaction.dart';
 class Transactions with ChangeNotifier {
   List<Transaction> transactions;
 
-  Transactions(this.transactions);
+  // Transactions(this.transactions);
 
   void _addNewTransaction(String title, double amount, DateTime chosenDate) {
     final newTx = Transaction(
@@ -23,4 +23,7 @@ class Transactions with ChangeNotifier {
     });
     notifyListeners();
   }
+
+
+
 }
